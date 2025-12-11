@@ -378,6 +378,19 @@ public final class LiquidLensView: UIView {
         transition.setFrame(view: self.restingBackgroundView, frame: CGRect(origin: CGPoint(), size: params.size))
         self.restingBackgroundView.update(isDark: params.isDark)
         transition.setAlpha(view: self.restingBackgroundView, alpha: params.isLifted ? 0.0 : 1.0)
+        
+        // Update chromatic border if enabled
+        if let chromaticBorderView = self.chromaticBorderView {
+            let lensFrame = baseLensFrame.insetBy(dx: 4.0, dy: 4.0)
+            transition.setFrame(view: chromaticBorderView, frame: lensFrame)
+            chromaticBorderView.cornerRadius = lensFrame.height / 2
+        }
+        
+        // Update refraction layer if enabled
+        if let refractionLayer = self.refractionLayer {
+            let lensFrame = baseLensFrame.insetBy(dx: 4.0, dy: 4.0)
+            transition.setFrame(layer: refractionLayer, frame: lensFrame)
+        }
 
         if params.isLifted {
             if self.liftedDisplayLink == nil {

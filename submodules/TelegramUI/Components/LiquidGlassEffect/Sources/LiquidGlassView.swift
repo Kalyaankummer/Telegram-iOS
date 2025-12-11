@@ -4,7 +4,7 @@ import UIKit
 public final class LiquidGlassView: UIView {
     private let blurView: GlassBlurView
     private let refractionLayer: SelfRefractionLayer
-    private let chromaticBorder: ChromaticBorderView
+    public let chromaticBorder: ChromaticBorderView
     private let highlightView: UIView
     private let shadowLayer: CALayer
     public let contentView: UIView
