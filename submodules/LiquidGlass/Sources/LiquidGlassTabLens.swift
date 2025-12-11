@@ -97,7 +97,7 @@ public final class LiquidGlassTabLens: UIView {
         
         if animated && LiquidGlassConfiguration.shared.shouldEnableSpringAnimations {
             // Determine if we're moving left or right
-            let isMovingRight = (fromIndex ?? index) < index
+            let isMovingRight = (fromIndex ?? 0) < index
             
             // Stretch animation
             if let fromIndex = fromIndex {

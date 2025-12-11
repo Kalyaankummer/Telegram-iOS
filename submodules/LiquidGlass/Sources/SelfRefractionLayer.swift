@@ -104,22 +104,16 @@ public final class SelfRefractionLayer: CALayer {
             return
         }
         
-        // Animate the transform instead of non-existent refractionIntensity property
-        let fromScale = 1.0 + (refractionIntensity * 0.05)
-        let toScale = 1.0 + (intensity * 0.05)
-        
-        let animation = CASpringAnimation(keyPath: "transform.scale")
-        animation.damping = 15.0
-        animation.stiffness = 300.0
-        animation.mass = 1.0
-        animation.duration = duration
-        animation.fromValue = fromScale
-        animation.toValue = toScale
-        animation.fillMode = .forwards
-        animation.isRemovedOnCompletion = false
-        
-        add(animation, forKey: "refractionAnimation")
+        // Update the property value and trigger visual update
+        let oldValue = refractionIntensity
         refractionIntensity = intensity
+        
+        // Animate using UIView animation for smooth transition
+        CATransaction.begin()
+        CATransaction.setAnimationDuration(duration)
+        CATransaction.setAnimationTimingFunction(CAMediaTimingFunction(name: .easeInEaseOut))
+        updateRefraction()
+        CATransaction.commit()
     }
 }
 

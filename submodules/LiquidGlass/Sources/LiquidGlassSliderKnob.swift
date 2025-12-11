@@ -110,6 +110,8 @@ public final class LiquidGlassSliderKnob: UIControl {
     
     private func updateKnobPosition(animated: Bool) {
         let trackRange = sliderHeight - knobHeight
+        guard trackRange > 0 else { return } // Prevent division by zero
+        
         let knobY = (1.0 - value) * trackRange // Inverted: 0 at bottom, 1 at top
         
         let updateBlock = {
@@ -183,6 +185,7 @@ public final class LiquidGlassSliderKnob: UIControl {
             
             // Update value based on position (inverted)
             let trackRange = sliderHeight - knobHeight
+            guard trackRange > 0 else { return } // Prevent division by zero
             value = 1.0 - (newY / trackRange)
             
             gesture.setTranslation(.zero, in: self)
