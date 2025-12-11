@@ -7,6 +7,7 @@ import ActivityIndicator
 import BundleIconComponent
 import ShimmerEffect
 import GlassBackgroundComponent
+import LiquidGlassEffect
 
 public final class ButtonBadgeComponent: Component {
     let fillColor: UIColor

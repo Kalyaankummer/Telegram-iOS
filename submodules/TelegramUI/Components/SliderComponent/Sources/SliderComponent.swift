@@ -5,6 +5,7 @@ import AsyncDisplayKit
 import TelegramPresentationData
 import LegacyComponents
 import ComponentFlow
+import LiquidGlassEffect
 
 public final class SliderComponent: Component {
     public final class Discrete: Equatable {
@@ -68,6 +69,7 @@ public final class SliderComponent: Component {
     
     public let content: Content
     public let useNative: Bool
+    public let useGlassKnob: Bool
     public let trackBackgroundColor: UIColor
     public let trackForegroundColor: UIColor
     public let minTrackForegroundColor: UIColor?
@@ -78,6 +80,7 @@ public final class SliderComponent: Component {
     public init(
         content: Content,
         useNative: Bool = false,
+        useGlassKnob: Bool = false,
         trackBackgroundColor: UIColor,
         trackForegroundColor: UIColor,
         minTrackForegroundColor: UIColor? = nil,
@@ -87,6 +90,7 @@ public final class SliderComponent: Component {
     ) {
         self.content = content
         self.useNative = useNative
+        self.useGlassKnob = useGlassKnob
         self.trackBackgroundColor = trackBackgroundColor
         self.trackForegroundColor = trackForegroundColor
         self.minTrackForegroundColor = minTrackForegroundColor
@@ -97,6 +101,9 @@ public final class SliderComponent: Component {
     
     public static func ==(lhs: SliderComponent, rhs: SliderComponent) -> Bool {
         if lhs.content != rhs.content {
+            return false
+        }
+        if lhs.useGlassKnob != rhs.useGlassKnob {
             return false
         }
         if lhs.trackBackgroundColor != rhs.trackBackgroundColor {
