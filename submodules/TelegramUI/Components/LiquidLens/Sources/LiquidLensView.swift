@@ -3,6 +3,7 @@ import UIKit
 import Display
 import ComponentFlow
 import GlassBackgroundComponent
+import LiquidGlassEffect
 
 private final class RestingBackgroundView: UIVisualEffectView {
     var isDark: Bool?
@@ -97,6 +98,12 @@ public final class LiquidLensView: UIView {
     private var legacyContentMaskView: UIView?
     private var legacyContentMaskBlobView: UIImageView?
     private var legacyLiftedContentBlobMaskView: UIImageView?
+    
+    // Liquid Glass Effect enhancements
+    private var refractionLayer: SelfRefractionLayer?
+    private var chromaticBorderView: ChromaticBorderView?
+    public var enableSelfRefraction: Bool = true
+    public var enableChromaticBorder: Bool = false
 
     public var selectedContentView: UIView {
         return self.liftedContainerView
@@ -191,6 +198,22 @@ public final class LiquidLensView: UIView {
             }
             
             lensView.setValue(UIColor(white: 0.0, alpha: 0.1), forKey: "restingBackgroundColor")
+            
+            // Add self-refraction layer for iOS 15+
+            if LiquidGlassConfiguration.shared.supportsSelfRefraction && enableSelfRefraction {
+                let refraction = SelfRefractionLayer()
+                self.refractionLayer = refraction
+                lensView.layer.addSublayer(refraction)
+                refraction.setRefractionIntensity(0.5, animated: false)
+            }
+            
+            // Add chromatic border if enabled
+            if enableChromaticBorder {
+                let border = ChromaticBorderView()
+                self.chromaticBorderView = border
+                border.borderWidth = 1.5
+                self.containerView.insertSubview(border, aboveSubview: lensView)
+            }
         } else {
             let legacySelectionView = GlassBackgroundView.ContentImageView()
             self.legacySelectionView = legacySelectionView
@@ -355,6 +378,19 @@ public final class LiquidLensView: UIView {
         transition.setFrame(view: self.restingBackgroundView, frame: CGRect(origin: CGPoint(), size: params.size))
         self.restingBackgroundView.update(isDark: params.isDark)
         transition.setAlpha(view: self.restingBackgroundView, alpha: params.isLifted ? 0.0 : 1.0)
+        
+        // Update chromatic border if enabled
+        if let chromaticBorderView = self.chromaticBorderView {
+            let lensFrame = baseLensFrame.insetBy(dx: 4.0, dy: 4.0)
+            transition.setFrame(view: chromaticBorderView, frame: lensFrame)
+            chromaticBorderView.cornerRadius = lensFrame.height / 2
+        }
+        
+        // Update refraction layer if enabled
+        if let refractionLayer = self.refractionLayer {
+            let lensFrame = baseLensFrame.insetBy(dx: 4.0, dy: 4.0)
+            transition.setFrame(layer: refractionLayer, frame: lensFrame)
+        }
 
         if params.isLifted {
             if self.liftedDisplayLink == nil {

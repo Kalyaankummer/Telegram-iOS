@@ -11,6 +11,7 @@ import UIKitRuntimeUtils
 import BundleIconComponent
 import TextBadgeComponent
 import LiquidLens
+import LiquidGlassEffect
 import AppBundle
 
 private final class TabSelectionRecognizer: UIGestureRecognizer {
@@ -183,6 +184,9 @@ public final class TabBarComponent: Component {
         
         public override init(frame: CGRect) {
             self.liquidLensView = LiquidLensView()
+            // Enable liquid glass effects
+            self.liquidLensView.enableSelfRefraction = true
+            self.liquidLensView.enableChromaticBorder = true
             
             self.contextGestureContainerView = ContextControllerSourceView()
             self.contextGestureContainerView.isGestureEnabled = true

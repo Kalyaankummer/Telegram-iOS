@@ -4,21 +4,25 @@ import Display
 import AsyncDisplayKit
 import ComponentFlow
 import TelegramPresentationData
+import LiquidGlassEffect
 
 public final class SwitchComponent: Component {
     public typealias EnvironmentType = Empty
     
     let tintColor: UIColor?
     let value: Bool
+    let useGlassThumb: Bool
     let valueUpdated: (Bool) -> Void
     
     public init(
         tintColor: UIColor? = nil,
         value: Bool,
+        useGlassThumb: Bool = false,
         valueUpdated: @escaping (Bool) -> Void
     ) {
         self.tintColor = tintColor
         self.value = value
+        self.useGlassThumb = useGlassThumb
         self.valueUpdated = valueUpdated
     }
     
@@ -29,11 +33,15 @@ public final class SwitchComponent: Component {
         if lhs.value != rhs.value {
             return false
         }
+        if lhs.useGlassThumb != rhs.useGlassThumb {
+            return false
+        }
         return true
     }
     
     public final class View: UIView {
         private let switchView: UISwitch
+        private var glassThumb: LiquidGlassSwitchThumb?
     
         private var component: SwitchComponent?
         
