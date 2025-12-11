@@ -51,34 +51,21 @@ public final class GlassBlurView: UIView {
         
         currentBlurRadius = radius
         
-        if animated {
-            UIView.animate(withDuration: 0.3, delay: 0, options: [.curveEaseInOut], animations: {
-                self.applyCustomBlurRadius()
-            })
-        } else {
-            applyCustomBlurRadius()
-        }
+        // Note: Actual radius adjustment is not available through public APIs
+        // The blur effect uses the standard UIBlurEffect style
     }
     
     private func applyCustomBlurRadius() {
-        // Try to access the internal blur layer to adjust radius
-        guard let sublayer = blurView.layer.sublayers?.first else { return }
-        
-        // Use CAFilter to adjust blur radius if available
-        if let filterClass = NSClassFromString("CAFilter") as AnyObject as? NSObjectProtocol {
-            let selector = NSSelectorFromString("filterWithName:")
-            
-            if filterClass.responds(to: selector) {
-                // Create gaussian blur filter
-                let filter = filterClass.perform(selector, with: "gaussianBlur")?.takeUnretainedValue() as? NSObject
-                
-                if let filter = filter {
-                    // Set blur radius
-                    filter.setValue(currentBlurRadius, forKey: "inputRadius")
-                    sublayer.filters = [filter]
-                }
-            }
-        }
+        // Note: Custom blur radius adjustment requires private API access which is not
+        // recommended for production use. UIVisualEffectView provides standard blur effects
+        // but does not expose radius customization through public APIs.
+        // 
+        // For production, consider:
+        // 1. Using standard UIBlurEffect.Style presets
+        // 2. Layering multiple blur views with different alphas
+        // 3. Using CIGaussianBlur filter with a custom rendering pipeline
+        //
+        // This implementation maintains the standard blur effect provided by UIVisualEffectView
     }
     
     public override func layoutSubviews() {

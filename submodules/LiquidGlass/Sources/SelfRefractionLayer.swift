@@ -70,22 +70,16 @@ public final class SelfRefractionLayer: CALayer {
     
     @available(iOS 15.0, *)
     private func applyBumpDistortion() {
-        guard let context = context else { return }
+        // Note: CIBumpDistortion requires integration with the view's rendering pipeline
+        // to capture and process the layer content. This would typically be done by:
+        // 1. Capturing the layer's rendered content as a CIImage
+        // 2. Applying the CIBumpDistortion filter
+        // 3. Rendering the filtered output back to the layer
+        // This simplified implementation provides the structure for such integration
+        // but requires additional rendering setup in the parent view hierarchy.
         
-        // Create a simple distortion effect using CIBumpDistortion
-        if let filter = CIFilter(name: "CIBumpDistortion") {
-            // Get the center point of the layer
-            let center = CIVector(x: bounds.midX, y: bounds.midY)
-            
-            filter.setValue(center, forKey: kCIInputCenterKey)
-            filter.setValue(refractionRadius, forKey: kCIInputRadiusKey)
-            filter.setValue(refractionIntensity * 10.0, forKey: kCIInputScaleKey)
-            
-            // Note: In a real implementation, you would capture the layer's content
-            // and apply the filter. This is a simplified version that demonstrates
-            // the concept. The actual rendering would need to be integrated with
-            // the view's rendering pipeline.
-        }
+        // For now, we use a subtle scale transform as a placeholder effect
+        applyFallbackEffect()
     }
     
     private func applyFallbackEffect() {
@@ -110,13 +104,17 @@ public final class SelfRefractionLayer: CALayer {
             return
         }
         
-        let animation = CASpringAnimation(keyPath: "refractionIntensity")
+        // Animate the transform instead of non-existent refractionIntensity property
+        let fromScale = 1.0 + (refractionIntensity * 0.05)
+        let toScale = 1.0 + (intensity * 0.05)
+        
+        let animation = CASpringAnimation(keyPath: "transform.scale")
         animation.damping = 15.0
         animation.stiffness = 300.0
         animation.mass = 1.0
         animation.duration = duration
-        animation.fromValue = refractionIntensity
-        animation.toValue = intensity
+        animation.fromValue = fromScale
+        animation.toValue = toScale
         animation.fillMode = .forwards
         animation.isRemovedOnCompletion = false
         

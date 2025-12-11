@@ -118,7 +118,7 @@ public final class LiquidGlassExamples {
     
     // MARK: - Example 9: Complete UI Component
     
-    public static func createCompleteExample(in containerView: UIView) {
+    public static func createCompleteExample(in containerView: UIView, buttonHandler: @escaping () -> Void) {
         let glassView = createBasicGlassView()
         glassView.frame = CGRect(x: 20, y: 100, width: containerView.bounds.width - 40, height: 200)
         
@@ -128,7 +128,10 @@ public final class LiquidGlassExamples {
             button.frame = CGRect(x: 20, y: 20, width: 72, height: 92)
             glassView.contentView.addSubview(button)
             
-            button.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
+            // Use a closure-based approach instead of target-action
+            button.addAction(UIAction { _ in
+                buttonHandler()
+            }, for: .touchUpInside)
         }
         
         // Add a switch
@@ -137,10 +140,6 @@ public final class LiquidGlassExamples {
         glassView.contentView.addSubview(switchControl)
         
         containerView.addSubview(glassView)
-    }
-    
-    @objc private static func buttonTapped() {
-        print("Glass button tapped!")
     }
     
     // MARK: - Configuration Examples
